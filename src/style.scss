@@ -31,7 +31,6 @@
   flex: 1;
   position: relative;
   margin-bottom: 1em;
-  border: 1px solid rgba(24,116,205,0.7);
 
   [hidden] {
     display: none;
@@ -40,6 +39,9 @@
   #canvas {
     width: 1300px;
     height: 800px;
+    display: block;
+    margin: auto;
+    border: 1px solid rgba(24, 116, 205, 0.7);
   }
 
   #scorescreen {
@@ -201,10 +203,6 @@
     width: 100px;
     height: 25px;
     cursor: pointer;
-    background: -webkit-linear-gradient(top, #06c, #69c);
-    background: -ms-linear-gradient(top, #06c, #69c);
-    background: -moz-linear-gradient(top, #06c, #69c);
-    background: -o-linear-gradient(top, #06c, #69c);
     background: linear-gradient(top, #06c, #69c);
   }
 
@@ -218,7 +216,7 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.7);
-    z-index: 1;
+    z-index: 2;
     top: 0;
     left: 0;
   }
@@ -227,17 +225,13 @@
     display: block;
     margin: 10px 0 0 0;
     background: url('./assets/logo.png') left center no-repeat;
-    height: 100px;
-    padding-top: 28px;
+    height: 120px;
+    padding-top: 10px;
     padding-left: 150px;
     font-size: 60px;
     font-weight: bold;
     color: #FFF;
     text-shadow: 0 0 25px #dbcd44;
-    -o-transform: skewX(-10deg);
-    -ms-transform: skewX(-10deg);
-    -webkit-transform: skewX(-10deg);
-    -moz-transform: skewX(-10deg);
     transform: skewX(-10deg);
   }
 
@@ -290,7 +284,7 @@
     left: 50%;
     margin-left: -300px;
     width: 600px;
-    z-index: 1;
+    z-index: 2;
   }
 
   #chat-input {

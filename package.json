@@ -1,7 +1,7 @@
 {
   "name": "spaceshoot-sample-pilet",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.1.0",
+  "description": "The SpaceShoot game as a separate page.",
   "keywords": [
     "pilet"
   ],

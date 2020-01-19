@@ -1,4 +1,4 @@
-import { MAX_BOMBS, MAX_LIFE, MAX_SPEED, MAX_SHIELDS } from '../constants';
+import { maxBombs, maxShipLife, maxVelocity, maxShields } from '../constants';
 import { sprites } from '../managers';
 import { IGauges, IGame } from '../types';
 
@@ -10,12 +10,15 @@ export class Gauges implements IGauges {
   private network: Gauge;
   private users: Gauge;
 
-  constructor(private game: IGame) {
-    const offset = game.c.canvas.width / 8;
-    this.speed = new Gauge(game, offset, 670, MAX_SPEED, sprites.get('speedlogo'));
-    this.health = new Gauge(game, offset + 110, 670, MAX_LIFE, sprites.get('healthlogo'), true);
-    this.bombs = new Gauge(game, offset + 240, 670, MAX_BOMBS, sprites.get('bomblogo'));
-    this.shield = new Gauge(game, offset + 350, 670, MAX_SHIELDS, sprites.get('shieldlogo'));
+  constructor(private game: IGame) {}
+
+  init() {
+    const game = this.game;
+    const offset = game.width / 8;
+    this.speed = new Gauge(game, offset, 670, maxVelocity, sprites.get('speedlogo'));
+    this.health = new Gauge(game, offset + 110, 670, maxShipLife, sprites.get('healthlogo'), true);
+    this.bombs = new Gauge(game, offset + 240, 670, maxBombs, sprites.get('bomblogo'));
+    this.shield = new Gauge(game, offset + 350, 670, maxShields, sprites.get('shieldlogo'));
     this.network = new Gauge(game, offset, 100, 100, sprites.get('networklogo'), undefined, false);
     this.users = new Gauge(game, offset + 110, 100, 40, sprites.get('userslogo'), undefined, false);
   }

@@ -1,5 +1,5 @@
-﻿import { sounds, sprites } from './managers';
-import { LOGIC_TIME, DOC_TITLE, secondaryColors } from './constants';
+﻿import { sounds, sprites, resources } from './managers';
+import { logicTimeMs, secondaryColors } from './constants';
 import { handlefocus, gameMenuHelper } from './helpers';
 import { Sockets, Keyboard, Settings, Drone, Explosion, Asteroid, Bomb, Ship, Pack, Particle } from './objects';
 import { Chat, Gauges, Score, Menu, Dialog, InfoText, IntroText } from './widgets';
@@ -7,6 +7,7 @@ import { IGame, IShip, IInfo, ISettings, IChat, IScore, IDialog, IGauges, IMenu,
 
 export class Game implements IGame {
   private mouseover: (e: Event) => {};
+  private loaded = false;
 
   //Current game time
   private ticks = -1;
@@ -68,7 +69,7 @@ export class Game implements IGame {
   score: IScore;
 
   constructor() {
-    this.dialog = new Dialog();
+    this.dialog = new Dialog(this);
     this.gauge = new Gauges(this);
     this.menu = new Menu(this);
     this.network = new Sockets(this);
@@ -88,10 +89,16 @@ export class Game implements IGame {
 
   init(host: HTMLDivElement) {
     this.host = host;
-    this.c = document.querySelector('canvas').getContext('2d');
+    this.c = host.querySelector('canvas').getContext('2d');
+    this.gauge.init();
+    this.settings.init();
     this.dialog.init();
     this.chat.init();
     this.menu.init();
+
+    if (!this.loaded) {
+      resources.load(this);
+    }
   }
 
   getShip(id: string) {
@@ -132,27 +139,32 @@ export class Game implements IGame {
   }
 
   resume() {
-    const c = this.c;
+    const { c, host } = this;
     c.font = '10px Orbitron';
     this.mouseover = handlefocus(c);
-    document.body.addEventListener('keydown', this.keyboard.press, false);
-    document.body.addEventListener('keyup', this.keyboard.release, false);
-    document.body.addEventListener('mouseover', this.mouseover, false);
-    document.body.setAttribute('tabindex', '0');
-    document.body.focus();
+    host.addEventListener('keydown', this.keyboard.press, false);
+    host.addEventListener('keyup', this.keyboard.release, false);
+    host.addEventListener('mouseover', this.mouseover, false);
+    host.setAttribute('tabindex', '0');
+    host.focus();
+
+    this.loop = setInterval(() => this.singleLoop(), logicTimeMs);
   }
 
   pause() {
-    document.body.removeEventListener('keydown', this.keyboard.press, false);
-    document.body.removeEventListener('keyup', this.keyboard.release, false);
-    document.body.removeEventListener('mouseover', this.mouseover, false);
+    const { host } = this;
+    host.removeEventListener('keydown', this.keyboard.press, false);
+    host.removeEventListener('keyup', this.keyboard.release, false);
+    host.removeEventListener('mouseover', this.mouseover, false);
+
+    clearInterval(this.loop);
+    this.loop = false;
   }
 
   startSingle() {
     const { c, settings, keyboard } = this;
     this.reset();
-    gameMenuHelper(true);
-    document.title = `Singleplayer - ${DOC_TITLE}`;
+    gameMenuHelper(this, true);
     //Produces the Intro
     this.intro = new IntroText(
       this,
@@ -172,7 +184,7 @@ export class Game implements IGame {
     this.myship = new Ship(this, 1, settings.playerColors, keyboard);
     this.ships.push(this.myship);
     this.running = true;
-    this.loop = setInterval(() => this.singleLoop(), LOGIC_TIME);
+    this.loop = setInterval(() => this.singleLoop(), logicTimeMs);
   }
 
   progress(total: number, loaded: number) {
@@ -181,6 +193,7 @@ export class Game implements IGame {
 
     if (loaded === total) {
       network.setup();
+      this.loaded = true;
     } else {
       infoTexts.push(
         new InfoText(this, width / 2, height / 2, 100, `Loading ${~~((100 * loaded) / total)}%`, secondaryColors[0]),
@@ -192,9 +205,8 @@ export class Game implements IGame {
 
   startMulti(data: any) {
     this.reset();
-    gameMenuHelper(true);
+    gameMenuHelper(this, true);
     this.multiplayer = true;
-    document.title = `Multiplayer - ${DOC_TITLE}`;
 
     for (const ship of data.ships) {
       this.ships.push(Ship.from(this, ship));
@@ -346,17 +358,18 @@ export class Game implements IGame {
 
   showStatistic() {
     if (this.score.isShown || this.isDead) {
+      const { host } = this;
       const details = this.score.getRanking();
-      document.querySelector('#scores').innerHTML = `<li>${details.join('</li><li>')}</li>`;
+      host.querySelector('#scores').innerHTML = `<li>${details.join('</li><li>')}</li>`;
     }
   }
 
   draw() {
-    const c = this.c;
+    const { c, host } = this;
     const w = c.canvas.width;
     const h = c.canvas.height;
-    const winh = window.innerHeight || document.body.clientHeight;
-    const winw = window.innerWidth || document.body.clientWidth;
+    const winh = window.innerHeight || host.clientHeight;
+    const winw = window.innerWidth || host.clientWidth;
     const background = sprites.get('background');
 
     c.clearRect(0, 0, w, h);
@@ -474,6 +487,7 @@ export class Game implements IGame {
     for (let i = this.asteroids.length; i--; ) {
       if (!this.asteroids[i].logic()) {
         this.explosions.push(Explosion.from(this, this.asteroids[i]));
+        this.asteroids.splice(i, 1);
       }
     }
 
@@ -494,6 +508,7 @@ export class Game implements IGame {
         this.explosions.push(Explosion.from(this, ship));
         this.score.update();
         this.score.show();
+        this.ships.splice(i, 1);
       }
 
     ++this.ticks;

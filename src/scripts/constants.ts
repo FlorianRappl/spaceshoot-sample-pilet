@@ -1,74 +1,71 @@
 //Maximum amount of ammo that can be carried
-export const MAX_AMMO = 50;
+export const maxAmmo = 50;
 
 //Maximum amount of bombs that can be carried
-export const MAX_BOMBS = 5;
+export const maxBombs = 5;
 
 //Cooldown between two shots
-export const INIT_COOLDOWN = 10
+export const shipCooldown = 10
 
 //Cooldown of a drone between two shots
-export const DRONE_INIT_COOLDOWN = 30;
+export const droneCooldown = 30;
 
 //Maximum amount of life (of the ship)
-export const MAX_LIFE = 100;
+export const maxShipLife = 100;
 
 //Maximum amount of life for the drones
-export const DRONE_MAX_LIFE = 10;
+export const maxDroneLife = 10;
 
 //Maximum time that a particle (ammo) is alive
-export const MAX_PARTICLE_TIME = 120;
+export const maxParticleTimeCycles = 120;
 
 //Initial life of an asteroid
-export const ASTEROID_LIFE = 10;
+export const asteroidLife = 10;
 
-//Maximum speed of the sheep
-export const MAX_SPEED = 8;
+//Maximum speed of the ship
+export const maxVelocity = 8;
 
 //Maximum health of the shield
-export const MAX_SHIELDS = 99;
+export const maxShields = 99;
 
 //Maximum damage per shot
-export const DAMAGE_FACTOR = 14;
+export const shotDamageFactor = 14;
 
 //Maximum damage per bomb
-export const BOMB_DAMAGE_FACTOR = 50;
+export const bombDamageFactor = 50;
 
 //Acceleration per round
-export const ACCELERATE = 0.1;
+export const acceleratePerCycle = 0.1;
 
 //Rotation per round
-export const ROTATE = 4;
+export const rotatePerCycle = 4;
 
 //Lifetime of a special pack
-export const PACK_TIME = 180;
+export const packTimeCycles = 180;
 
 //Life of a bomb before detonating
-export const BOMB_LIFE = 10;
+export const bombLife = 10;
 
 //Waittime for the bomb to detonate
-export const BOMB_WAIT = 100;
+export const bombTimeCycles = 100;
 
 //Minimum damage of the bomb
-export const BOMB_RESIDUE = 5;
+export const minBombDamage = 5;
 
 //The fixed logic time in ms
-export const LOGIC_TIME = 40;
+export const logicTimeMs = 40;
 
 //Logic times till shield loses automatically 1 hp
-export const SHIELD_DECAY_TIME = 5;
+export const shieldDecayTimeCycles = 5;
 
 //Maximum radius for a bomb detonation
-export const MAX_BOMB_RADIUS = 300;
-
-//Saves the title of the game
-export const DOC_TITLE = 'SpaceShoot 1.0.0 silver';
+export const maxBombRadius = 300;
 
 //Time for a chat message to disappear
-export const CHAT_WAIT_TIME = 200;
+export const chatMessageDisappearMs = 200;
 
 //(Default) Connection string to server
-export const CONNECTION = '132.199.99.246:8081';
+export const defaultConnection = '132.199.99.246:8081';
 
 //The [predefined] color palette (first colors)
 export const primaryColors = [

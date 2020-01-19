@@ -1,24 +1,28 @@
-import { IDialog } from '../types';
+import { IDialog, IGame } from '../types';
 
 export class Dialog implements IDialog {
   private callback: () => void;
 
+  constructor(private game: IGame) {}
+
   init() {
-    document.getElementById('dialog-ok').onclick = () => {
+    const { host } = this.game;
+    host.querySelector<HTMLElement>('#dialog-ok').onclick = () => {
       if (this.callback) {
         this.callback();
       }
 
-      document.getElementById('dialog').style.display = 'none';
-      document.getElementById('inactive').style.display = 'none';
-      document.getElementById('dialog-message').innerHTML = '';
+      host.querySelector<HTMLElement>('#dialog').style.display = 'none';
+      host.querySelector<HTMLElement>('#inactive').style.display = 'none';
+      host.querySelector<HTMLElement>('#dialog-message').innerHTML = '';
     };
   }
 
   open(title: string, text: string, cb?: () => void) {
-    document.getElementById('dialog').style.display = 'block';
-    document.getElementById('inactive').style.display = 'block';
-    document.getElementById('dialog-message').innerHTML = `<strong>${title}</strong><p>${text}</p>`;
+    const { host } = this.game;
+    host.querySelector<HTMLElement>('#dialog').style.display = 'block';
+    host.querySelector<HTMLElement>('#inactive').style.display = 'block';
+    host.querySelector<HTMLElement>('#dialog-message').innerHTML = `<strong>${title}</strong><p>${text}</p>`;
     this.callback = cb;
   }
 }

@@ -1,5 +1,5 @@
 import { Explosion } from './Explosion';
-import { BOMB_WAIT, BOMB_LIFE, MAX_BOMB_RADIUS, BOMB_DAMAGE_FACTOR, BOMB_RESIDUE } from '../constants';
+import { bombTimeCycles, bombLife, maxBombRadius, bombDamageFactor, minBombDamage } from '../constants';
 import { InfoText } from '../widgets';
 import { collisionC2C } from '../helpers';
 import { sprites, sounds } from '../managers';
@@ -7,9 +7,9 @@ import { IGame, IBomb, IShip, ILifeObject } from '../types';
 
 export class Bomb implements IBomb {
   private image = sprites.get('detonator');
-  wait = BOMB_WAIT;
+  wait = bombTimeCycles;
   radius = 0;
-  life = BOMB_LIFE;
+  life = bombLife;
   size = 16;
   explosion = 2;
   hitlist: Array<ILifeObject>;
@@ -38,7 +38,7 @@ export class Bomb implements IBomb {
 
     if (this.wait > 0) {
       const s2 = this.size / 2;
-      const ms = Math.sin((20 * Math.PI * (Math.exp(1 - this.wait / BOMB_WAIT) - 1)) / Math.E);
+      const ms = Math.sin((20 * Math.PI * (Math.exp(1 - this.wait / bombTimeCycles) - 1)) / Math.E);
       c.drawImage(this.image, 0, 0, this.image.width, this.image.height, -s2, -s2, this.size, this.size);
       c.fillStyle = ms > 0 ? '#FFFF00' : '#FF0000';
       c.beginPath();
@@ -68,18 +68,19 @@ export class Bomb implements IBomb {
       this.radius += 5;
       const game = this.game;
       const { asteroids, drones, infoTexts, explosions, bombs, ships } = game;
-      const inv = MAX_BOMB_RADIUS - this.radius;
-      const damage = BOMB_DAMAGE_FACTOR * ((inv * inv) / MAX_BOMB_RADIUS / MAX_BOMB_RADIUS) + BOMB_RESIDUE;
+      const inv = maxBombRadius - this.radius;
+      const damage = ~~(bombDamageFactor * ((inv * inv) / maxBombRadius / maxBombRadius) + minBombDamage);
 
       for (let i = asteroids.length; i--; ) {
         const a = asteroids[i];
         let found = false;
 
-        for (let j = this.hitlist.length; j--; )
+        for (let j = this.hitlist.length; j--; ) {
           if (this.hitlist[j] === a) {
             found = true;
             break;
           }
+        }
 
         if (!found && collisionC2C(this.x, this.y, 2 * this.radius, a.x, a.y, a.size)) {
           this.hitlist.push(a);
@@ -92,6 +93,7 @@ export class Bomb implements IBomb {
             explosions.push(Explosion.from(game, a));
             this.owner.points += 5;
             this.owner.shotAsteroids += 1;
+            asteroids.splice(i, 1);
           } else {
             infoTexts.push(new InfoText(game, a.x, a.y, 50, `(${damage}DMG)`, this.owner.primaryColor));
           }
@@ -119,6 +121,7 @@ export class Bomb implements IBomb {
             explosions.push(Explosion.from(game, d));
             this.owner.points += 15;
             this.owner.shotDrones += 1;
+            drones.splice(i, 1);
           } else {
             infoTexts.push(new InfoText(game, d.x, d.y, 50, `(${damage}DMG)`, this.owner.primaryColor));
           }
@@ -146,6 +149,7 @@ export class Bomb implements IBomb {
           if (b.life <= 0) {
             infoTexts.push(new InfoText(game, b.x, b.y, 50, 'Yeah!', this.owner.primaryColor));
             explosions.push(Explosion.from(game, b));
+            bombs.splice(i, 1);
           } else {
             infoTexts.push(new InfoText(game, b.x, b.y, 50, `(${damage}DMG)`, this.owner.primaryColor));
           }
@@ -175,7 +179,7 @@ export class Bomb implements IBomb {
         }
       }
 
-      return this.radius < MAX_BOMB_RADIUS;
+      return this.radius < maxBombRadius;
     }
 
     return true;

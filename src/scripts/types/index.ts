@@ -3,6 +3,7 @@ export interface ISettings {
   server: string;
   playerName: string;
   playSounds: boolean;
+  init(): void;
   save(): void;
 }
 
@@ -31,6 +32,7 @@ export interface IChat {
 
 export interface IGauges {
   update(): void;
+  init(): void;
   draw(): void;
 }
 
@@ -153,6 +155,7 @@ export interface IGame {
   readonly gauge: IGauges;
   readonly score: IScore;
   readonly c: CanvasRenderingContext2D;
+  readonly host: HTMLDivElement;
   readonly settings: ISettings;
   readonly ships: Array<IShip>;
   readonly drones: Array<IDrone>;

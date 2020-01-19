@@ -7,15 +7,16 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "sample-piral": "0.8.4",
-    "typescript": "latest",
+    "@types/node": "latest",
     "@types/react": "^16.8.2",
     "@types/react-dom": "^16.8.0",
     "@types/react-router": "^5.0.0",
     "@types/react-router-dom": "latest",
-    "@types/node": "latest",
+    "piral-cli": "^0.8.3",
     "reactstrap": "^8.0.1",
-    "piral-cli": "^0.8.3"
+    "sample-piral": "0.8.4",
+    "sass": "^1.25.0",
+    "typescript": "latest"
   },
   "peerDependencies": {
     "reactstrap": "*",

@@ -1,4 +1,4 @@
-﻿import { CONNECTION, primaryColors, secondaryColors } from '../constants';
+﻿import { defaultConnection, primaryColors, secondaryColors } from '../constants';
 import { IGame, ISettings } from '../types';
 import { sounds } from '../managers';
 
@@ -26,16 +26,19 @@ export class Settings implements ISettings {
       this.droneColor = s.droneColor;
       this.display = s.display;
       this.playSounds = !!s.playSounds;
-      this.server = s.server || CONNECTION;
+      this.server = s.server || defaultConnection;
     }
+  }
 
+  init() {
     if (this.playSounds) {
-      document.querySelector<HTMLAudioElement>('#music').play();
+      const { host } = this.game;
+      host.querySelector<HTMLAudioElement>('#music').play();
     }
   }
 
   save() {
-    const { c, myship } = this.game;
+    const { c, myship, host } = this.game;
     c.canvas.className = this.display;
     localStorage.setItem(
       'settings',
@@ -50,9 +53,9 @@ export class Settings implements ISettings {
     );
 
     if (this.playSounds) {
-      document.querySelector<HTMLAudioElement>('#music').play();
+      host.querySelector<HTMLAudioElement>('#music').play();
     } else {
-      document.querySelector<HTMLAudioElement>('#music').pause();
+      host.querySelector<HTMLAudioElement>('#music').pause();
     }
 
     if (myship) {

@@ -1,4 +1,4 @@
-import { PACK_TIME, MAX_SHIELDS, SHIELD_DECAY_TIME, MAX_BOMBS, MAX_AMMO, MAX_LIFE } from '../constants';
+import { packTimeCycles, maxShields, shieldDecayTimeCycles, maxBombs, maxAmmo, maxShipLife } from '../constants';
 import { InfoText } from '../widgets';
 import { sprites } from '../managers';
 import { collisionC2Q, d2g } from '../helpers';
@@ -7,7 +7,7 @@ import { IGame, IPack, IShip } from '../types';
 export class Pack implements IPack {
   public size = 16;
   private angle = 0;
-  private time = PACK_TIME;
+  private time = packTimeCycles;
 
   constructor(
     private game: IGame,
@@ -27,8 +27,8 @@ export class Pack implements IPack {
 
     return new Pack(game, x, y, sprites.get('shield'), ship => {
       ship.points += 15;
-      ship.shield = MAX_SHIELDS;
-      ship.decay = SHIELD_DECAY_TIME;
+      ship.shield = maxShields;
+      ship.decay = shieldDecayTimeCycles;
       return '+DEF';
     });
   }
@@ -42,8 +42,8 @@ export class Pack implements IPack {
       const init = ship.life;
       ship.life += 30;
 
-      if (ship.life > MAX_LIFE) {
-        ship.life = MAX_LIFE;
+      if (ship.life > maxShipLife) {
+        ship.life = maxShipLife;
         return '+' + (ship.life - init) + 'HP';
       }
 
@@ -60,8 +60,8 @@ export class Pack implements IPack {
       const init = ship.ammo;
       ship.ammo += 20;
 
-      if (ship.ammo > MAX_AMMO) {
-        ship.ammo = MAX_AMMO;
+      if (ship.ammo > maxAmmo) {
+        ship.ammo = maxAmmo;
         return '+' + (ship.ammo - init) + 'AM';
       }
 
@@ -78,8 +78,8 @@ export class Pack implements IPack {
       const init = ship.bombs;
       ship.bombs += 2;
 
-      if (ship.bombs > MAX_BOMBS) {
-        ship.bombs = MAX_BOMBS;
+      if (ship.bombs > maxBombs) {
+        ship.bombs = maxBombs;
         return '+' + (ship.bombs - init) + 'BO';
       }
 
@@ -101,7 +101,7 @@ export class Pack implements IPack {
     c.save();
     c.translate(this.x, this.y);
     c.fillStyle = `rgba(${settings.playerColors[1]}, 0.8)`;
-    c.fillRect(-s2, s2 + 3, (this.size * this.time) / PACK_TIME, 2);
+    c.fillRect(-s2, s2 + 3, (this.size * this.time) / packTimeCycles, 2);
     c.rotate(d2g(this.angle));
     c.drawImage(this.image, 0, 0, this.image.width, this.image.height, -s2, -s2, this.size, this.size);
     c.restore();

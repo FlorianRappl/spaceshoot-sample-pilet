@@ -2,11 +2,11 @@ import { Explosion } from './Explosion';
 import { collisionC2C } from '../helpers';
 import { InfoText } from '../widgets';
 import { sounds } from '../managers';
-import { MAX_PARTICLE_TIME, DAMAGE_FACTOR } from '../constants';
+import { maxParticleTimeCycles, shotDamageFactor } from '../constants';
 import { IGame, IShip, IParticle } from '../types';
 
 export class Particle implements IParticle {
-  lifetime = MAX_PARTICLE_TIME;
+  lifetime = maxParticleTimeCycles;
   size = 6;
 
   constructor(
@@ -37,7 +37,7 @@ export class Particle implements IParticle {
   draw() {
     const { c } = this.game;
     c.save();
-    c.fillStyle = `rgba(${this.owner.primaryColor}, ${this.lifetime / MAX_PARTICLE_TIME})`;
+    c.fillStyle = `rgba(${this.owner.primaryColor}, ${this.lifetime / maxParticleTimeCycles})`;
     c.translate(this.x, this.y);
     c.beginPath();
     c.arc(0, 0, this.size / 2, 0, 2 * Math.PI, false);
@@ -50,7 +50,7 @@ export class Particle implements IParticle {
     const { asteroids, infoTexts, explosions, drones, bombs, ships } = game;
     this.x += this.vx;
     this.y += this.vy;
-    const damage = (DAMAGE_FACTOR * this.lifetime) / MAX_PARTICLE_TIME;
+    const damage = ~~((shotDamageFactor * this.lifetime) / maxParticleTimeCycles);
 
     for (let i = asteroids.length; i--; ) {
       const a = asteroids[i];
@@ -65,6 +65,7 @@ export class Particle implements IParticle {
           infoTexts.push(new InfoText(game, a.x, a.y, 50, 'Yeah!', this.owner.primaryColor));
           explosions.push(Explosion.from(game, a));
           this.owner.shotAsteroids += 1;
+          asteroids.splice(i, 1);
         } else {
           infoTexts.push(new InfoText(game, a.x, a.y, 50, `(${damage}DMG)`, this.owner.primaryColor));
         }
@@ -85,6 +86,7 @@ export class Particle implements IParticle {
           this.owner.points += 15;
           infoTexts.push(new InfoText(game, d.x, d.y, 50, 'Cool!', this.owner.primaryColor));
           explosions.push(Explosion.from(game, d));
+          drones.splice(i, 1);
           this.owner.shotDrones += 1;
         } else {
           infoTexts.push(new InfoText(game, d.x, d.y, 50, `(${damage}DMG)`, this.owner.primaryColor));
@@ -108,6 +110,7 @@ export class Particle implements IParticle {
         if (b.life <= 0) {
           infoTexts.push(new InfoText(game, b.x, b.y, 50, 'Woooh!', this.owner.primaryColor));
           explosions.push(Explosion.from(game, b));
+          bombs.splice(i, 1);
         } else {
           infoTexts.push(new InfoText(game, b.x, b.y, 50, `(${damage}DMG)`, this.owner.primaryColor));
         }

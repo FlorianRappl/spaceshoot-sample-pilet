@@ -6,11 +6,11 @@ export class ImageManager<T extends string> {
 
   constructor(images: Record<string, string>) {
     const imageNames = Object.keys(images);
-    this.images = imageNames.reduce((prev, curr) => {
+    this.images = imageNames.reduce((prev, name) => {
       const t = document.createElement('img');
       t.onload = this.reportLoaded;
       t.src = images[name];
-      prev[curr] = t;
+      prev[name] = t;
       return prev;
     }, {});
     this.count = imageNames.length;

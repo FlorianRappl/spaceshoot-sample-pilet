@@ -16,8 +16,8 @@
 .spaceshoot-tile {
   flex: 1;
 	background: #000 url('./assets/tile.jpg') repeat;
-  font-size: 1.5em;
-  padding: 1em;
+  font-size: 1.3em;
+  padding: 4em 1em 1em;
   color: white;
 
   &:hover {
@@ -30,6 +30,8 @@
   background: #000 url('./assets/tile.jpg') repeat;
   flex: 1;
   position: relative;
+  margin-bottom: 1em;
+  border: 1px solid rgba(24,116,205,0.7);
 
   [hidden] {
     display: none;
@@ -38,23 +40,17 @@
   #canvas {
     width: 1300px;
     height: 800px;
-    border: 1px solid rgba(24,116,205,0.7);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-left: -651px;
-    margin-top: -401px;
   }
 
   #scorescreen {
     display: none;
     position: absolute;
-    height: 650px;
+    height: 700px;
     width: 650px;
     top: 50%;
     left: 50%;
     margin-left: -325px;
-    margin-top: -325px;
+    margin-top: -350px;
     border: 0;
     border-radius: 20px;
     background: rgba(24,116,205,0.7);
@@ -67,11 +63,11 @@
   #menuscreen {
     display: none;
     position: absolute;
-    height: 600px;
+    height: 680px;
     width: 800px;
     top: 50%;
     left: 50%;
-    margin-top: -315px;
+    margin-top: -350px;
     margin-left: -415px;
     border: 15px solid rgba(255, 255, 255, 0.3);
     border-radius: 20px;
@@ -199,7 +195,6 @@
     border-radius: 5px;
     border: 0;
     box-shadow: 0 1px 2px #000;
-    padding-top: 5px;
     margin: 0 auto;
     color: white;
     font-weight: bold;
@@ -224,6 +219,8 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.7);
     z-index: 1;
+    top: 0;
+    left: 0;
   }
 
   #title {

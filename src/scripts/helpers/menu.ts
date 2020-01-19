@@ -1,8 +1,11 @@
-export function gameMenuHelper(running: boolean) {
-  document.getElementById('menu-leave').hidden = !running;
-  document.getElementById('menu-empty').hidden = !running;
-  document.getElementById('menu-scores').hidden = !running;
-  document.getElementById('menu-mphost').hidden = running;
-  document.getElementById('menu-mpjoin').hidden = running;
-  document.getElementById('menu-sp').hidden = running;
+import { IGame } from '../types';
+
+export function gameMenuHelper(game: IGame, running: boolean) {
+  const { host } = game;
+  host.querySelector<HTMLElement>('#menu-leave').hidden = !running;
+  host.querySelector<HTMLElement>('#menu-empty').hidden = !running;
+  host.querySelector<HTMLElement>('#menu-scores').hidden = !running;
+  host.querySelector<HTMLElement>('#menu-mphost').hidden = running;
+  host.querySelector<HTMLElement>('#menu-mpjoin').hidden = running;
+  host.querySelector<HTMLElement>('#menu-sp').hidden = running;
 }

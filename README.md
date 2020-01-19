@@ -1,6 +1,6 @@
 # spaceshoot-sample-pilet
 
-A pilet running the Mario5 game for the `sample-piral` app shell.
+A pilet running the SpaceShoot game for the `sample-piral` app shell.
 
 Used in the [sample application](https://demo-full.piral.io) for [Piral](https://piral.io), which is a framework for microfrontends.
 

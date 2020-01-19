@@ -4,21 +4,21 @@ import { Particle } from './Particle';
 import { d2g, pbc } from '../helpers';
 import { sprites } from '../managers';
 import {
-  MAX_LIFE,
-  MAX_AMMO,
-  MAX_SHIELDS,
-  ROTATE,
-  ACCELERATE,
-  MAX_SPEED,
-  INIT_COOLDOWN,
-  SHIELD_DECAY_TIME,
+  maxShipLife,
+  maxAmmo,
+  maxShields,
+  rotatePerCycle,
+  acceleratePerCycle,
+  maxVelocity,
+  shipCooldown,
+  shieldDecayTimeCycles,
 } from '../constants';
 import { IShip, IGame } from '../types';
 
 export class Ship implements IShip {
   size = 20; //Fixed size of the ship
   explosion = 4; //Explosion to use
-  life = MAX_LIFE; //Sets start life to maximum
+  life = maxShipLife; //Sets start life to maximum
   boost = 0; //Sets start boost to minimum
   hitByDrone = 0; //Final statistic - how often hit by drone?
   hitDrones = 0; //Final statistic - how often did kill a drone?
@@ -32,7 +32,7 @@ export class Ship implements IShip {
   respawn = false;
   accelerate = false;
   angle = 0; //Sets start angle to 0
-  ammo = MAX_AMMO; //Sets start ammo to maximum
+  ammo = maxAmmo; //Sets start ammo to maximum
   bombs = 0; //Sets start bombs to 0
   shield = 0; //Sets the starting shield to 0
   decay = 0; //Time to autodecrease the shield
@@ -100,8 +100,8 @@ export class Ship implements IShip {
     c.save();
     const gradient = c.createLinearGradient(0, -s22, 0, s22);
     gradient.addColorStop(0, 'rgb(' + this.primaryColor + ')');
-    gradient.addColorStop(this.life / MAX_LIFE, 'rgb(' + this.secondaryColor + ')');
-    gradient.addColorStop(this.life / MAX_LIFE, 'rgba(' + this.secondaryColor + ', 0.2)');
+    gradient.addColorStop(this.life / maxShipLife, 'rgb(' + this.secondaryColor + ')');
+    gradient.addColorStop(this.life / maxShipLife, 'rgba(' + this.secondaryColor + ', 0.2)');
     c.strokeStyle = this === myship ? 'rgba(0, 255, 0, 0.8)' : 'rgba(255, 0, 0, 0.8)';
     c.fillStyle = gradient;
     c.translate(this.x, this.y);
@@ -123,7 +123,7 @@ export class Ship implements IShip {
     if (this.shield > 0) {
       const gradient = c.createRadialGradient(0, 0, 0, 0, 0, this.size);
       gradient.addColorStop(0, '#4682b4');
-      gradient.addColorStop(1, 'rgba(0, 206, 209, ' + (this.shield / (2 * MAX_SHIELDS) + 0.1) + ')');
+      gradient.addColorStop(1, 'rgba(0, 206, 209, ' + (this.shield / (2 * maxShields) + 0.1) + ')');
       c.fillStyle = gradient;
       c.beginPath();
       c.arc(0, 0, this.size, 0, 2 * Math.PI, false);
@@ -134,8 +134,8 @@ export class Ship implements IShip {
     if (this.ammo > 0) {
       const gradient = c.createLinearGradient(-10, 0, 10, 0);
       gradient.addColorStop(0, '#4682b4');
-      gradient.addColorStop(this.ammo / MAX_AMMO, '#1e90ff');
-      gradient.addColorStop(this.ammo / MAX_AMMO, '#FFFFFF');
+      gradient.addColorStop(this.ammo / maxAmmo, '#1e90ff');
+      gradient.addColorStop(this.ammo / maxAmmo, '#FFFFFF');
       c.fillStyle = gradient;
       c.fillRect(-10, 18, 20, 3);
     }
@@ -161,26 +161,26 @@ export class Ship implements IShip {
     const game = this.game;
 
     if (this.control.left) {
-      this.angle -= ROTATE;
+      this.angle -= rotatePerCycle;
     }
 
     if (this.control.right) {
-      this.angle += ROTATE;
+      this.angle += rotatePerCycle;
     }
 
     const ta = d2g(this.angle);
     const oldspeed = this.boost;
 
     if (this.control.up) {
-      this.boost += ACCELERATE;
+      this.boost += acceleratePerCycle;
 
-      if (this.boost > MAX_SPEED) {
-        this.boost = MAX_SPEED;
+      if (this.boost > maxVelocity) {
+        this.boost = maxVelocity;
       }
     }
 
     if (this.control.down) {
-      this.boost -= ACCELERATE;
+      this.boost -= acceleratePerCycle;
 
       if (this.boost < 0) this.boost = 0;
     }
@@ -194,18 +194,18 @@ export class Ship implements IShip {
       --this.cooldown;
     } else if (this.control.bomb && this.bombs > 0) {
       --this.bombs;
-      this.cooldown = INIT_COOLDOWN;
+      this.cooldown = shipCooldown;
       this.game.bombs.push(new Bomb(game, this.x, this.y, this));
     } else if (this.control.shoot && this.ammo > 0) {
       const v = 4 + this.boost;
       --this.ammo;
-      this.cooldown = INIT_COOLDOWN;
+      this.cooldown = shipCooldown;
       this.game.particles.push(new Particle(game, this.x, this.y, v * Math.sin(ta), -v * Math.cos(ta), this));
     }
 
     if (this.shield > 0) {
       if (this.decay === 0) {
-        this.decay = SHIELD_DECAY_TIME;
+        this.decay = shieldDecayTimeCycles;
         --this.shield;
       } else {
         --this.decay;

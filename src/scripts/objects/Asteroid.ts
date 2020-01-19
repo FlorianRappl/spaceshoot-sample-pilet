@@ -63,7 +63,7 @@ export class Asteroid implements IAsteroid {
     this.x += this.vx;
     this.y += this.vy;
     this.angle += this.rotation;
-    const damage = this.size;
+    const damage = ~~this.size;
 
     for (const s of ships) {
       if (collisionC2C(this.x, this.y, this.size, s.x, s.y, s.size)) {
@@ -82,6 +82,7 @@ export class Asteroid implements IAsteroid {
 
         if (d.life <= 0) {
           explosions.push(Explosion.from(game, d));
+          drones.splice(drones.indexOf(d), 1);
         }
 
         return false;

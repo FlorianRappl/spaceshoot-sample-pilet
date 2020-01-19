@@ -1,4 +1,4 @@
-﻿import { CHAT_WAIT_TIME } from '../constants';
+﻿import { chatMessageDisappearMs } from '../constants';
 import { IChat, IGame } from '../types';
 
 export class Chat implements IChat {
@@ -10,21 +10,23 @@ export class Chat implements IChat {
   constructor(private game: IGame) {}
 
   toggle() {
-    const el = document.querySelector<HTMLInputElement>('#chat-input');
+    const { host } = this.game;
+    const el = host.querySelector<HTMLInputElement>('#chat-input');
     this.shown = !this.shown;
 
     if (this.shown) {
       el.style.display = 'block';
       el.focus();
     } else {
-      document.body.focus();
+      host.focus();
       el.style.display = 'none';
       this.game.c.canvas.focus();
     }
   }
 
   init() {
-    const input = document.querySelector<HTMLInputElement>('#chat-input');
+    const { host } = this.game;
+    const input = host.querySelector<HTMLInputElement>('#chat-input');
     input.onkeypress = e => {
       switch (e.keyCode) {
         case 27: //ESC
@@ -38,14 +40,16 @@ export class Chat implements IChat {
   }
 
   clear() {
-    document.querySelector('#chat-output').innerHTML = '';
-    document.querySelector<HTMLInputElement>('#chat-input').value = '';
+    const { host } = this.game;
+    host.querySelector('#chat-output').innerHTML = '';
+    host.querySelector<HTMLInputElement>('#chat-input').value = '';
     this.log = [];
     this.display = [];
   }
 
   post() {
-    const input = document.querySelector<HTMLInputElement>('#chat-input');
+    const { host } = this.game;
+    const input = host.querySelector<HTMLInputElement>('#chat-input');
 
     if (input.value) {
       this.game.network.send({
@@ -56,18 +60,21 @@ export class Chat implements IChat {
     }
   }
 
-  append(obj) {
+  append(obj: any) {
+    const { host } = this.game;
     this.log.push(obj);
-    this.display.push(CHAT_WAIT_TIME);
+    this.display.push(chatMessageDisappearMs);
     const div = document.createElement('div');
     div.innerHTML = `<span style="color:rgb(${obj.color})">${obj.from}:</span> ${obj.msg}`;
-    document.querySelector('#chat-output').appendChild(div);
+    host.querySelector('#chat-output').appendChild(div);
   }
 
   logic() {
+    const { host } = this.game;
+
     for (let i = this.display.length; i--; ) {
       if (!this.display[i]--) {
-        const el = document.querySelector('#chat-output');
+        const el = host.querySelector('#chat-output');
         el.removeChild(el.children[i]);
         this.display.splice(i, 1);
       }

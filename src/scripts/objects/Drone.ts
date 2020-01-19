@@ -3,10 +3,10 @@ import { d2g, pbc } from '../helpers';
 import {
   primaryColors,
   secondaryColors,
-  DRONE_MAX_LIFE,
-  ROTATE,
-  MAX_BOMB_RADIUS,
-  DRONE_INIT_COOLDOWN,
+  maxDroneLife,
+  rotatePerCycle,
+  maxBombRadius,
+  droneCooldown,
 } from '../constants';
 import { IGame, IDrone } from '../types';
 
@@ -43,7 +43,7 @@ export class Drone implements IDrone {
       alpha = x > 0 ? 270 : 90;
     }
 
-    return new Drone(game, x, y, 3, DRONE_MAX_LIFE, 6, alpha);
+    return new Drone(game, x, y, 3, maxDroneLife, 6, alpha);
   }
 
   draw() {
@@ -53,8 +53,8 @@ export class Drone implements IDrone {
     c.translate(this.x, this.y);
     const gradient = c.createLinearGradient(0, -s2, 0, s2);
     gradient.addColorStop(0, 'rgb(255, 30, 0)');
-    gradient.addColorStop(this.life / DRONE_MAX_LIFE, 'rgb(255, 140, 0)');
-    gradient.addColorStop(this.life / DRONE_MAX_LIFE, 'rgba(255, 140, 0, 0)');
+    gradient.addColorStop(this.life / maxDroneLife, 'rgb(255, 140, 0)');
+    gradient.addColorStop(this.life / maxDroneLife, 'rgba(255, 140, 0, 0)');
     c.strokeStyle = 'rgba(255, 255, 255, 1)';
     c.fillStyle = gradient;
     c.rotate(d2g(this.angle));
@@ -71,9 +71,9 @@ export class Drone implements IDrone {
   logic() {
     const game = this.game;
     const { asteroids, particles, ships } = game;
-    const tol = d2g(ROTATE);
+    const tol = d2g(rotatePerCycle);
     const tol2 = 2 * tol;
-    const bomb2 = MAX_BOMB_RADIUS / 2;
+    const bomb2 = maxBombRadius / 2;
     const ta = d2g(this.angle);
 
     for (let i = asteroids.length; i--; ) {
@@ -84,7 +84,7 @@ export class Drone implements IDrone {
       const beta = Math.acos((Math.sin(ta) * t1 + Math.cos(ta) * t2) / d);
 
       if (this.cooldown === 0 && beta < tol2 && d < bomb2) {
-        this.cooldown = DRONE_INIT_COOLDOWN;
+        this.cooldown = droneCooldown;
         particles.push(
           new Particle(
             game,
@@ -107,9 +107,9 @@ export class Drone implements IDrone {
       const beta = Math.acos((Math.sin(ta) * f * t1 + Math.cos(ta) * t2) / d);
 
       if (beta > tol) {
-        this.angle = this.angle + f * ROTATE;
-      } else if (this.cooldown === 0 && d < MAX_BOMB_RADIUS) {
-        this.cooldown = DRONE_INIT_COOLDOWN;
+        this.angle = this.angle + f * rotatePerCycle;
+      } else if (this.cooldown === 0 && d < maxBombRadius) {
+        this.cooldown = droneCooldown;
         particles.push(
           new Particle(
             game,
@@ -125,9 +125,9 @@ export class Drone implements IDrone {
       const coin = Math.random();
 
       if (coin < 0.1) {
-        this.angle -= ROTATE;
+        this.angle -= rotatePerCycle;
       } else if (coin < 0.2) {
-        this.angle += ROTATE;
+        this.angle += rotatePerCycle;
       }
     }
 

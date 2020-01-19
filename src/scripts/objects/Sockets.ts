@@ -1,6 +1,6 @@
 import { InfoText } from '../widgets';
 import { gameMenuHelper } from '../helpers';
-import { LOGIC_TIME, secondaryColors } from '../constants';
+import { logicTimeMs, secondaryColors } from '../constants';
 import { IGame, INetworkMatch, GameHostData } from '../types';
 
 export class Sockets {
@@ -43,12 +43,14 @@ export class Sockets {
   }
 
   connect() {
+    const { host } = this.game;
+
     if (this.game.settings.server && typeof WebSocket !== 'undefined') {
       if (this.socket) {
         this.socket.close();
       }
 
-      document.getElementById('wsconnect').hidden = false;
+      host.querySelector<HTMLElement>('#wsconnect').hidden = false;
       this.time = new Date().getTime();
       this.socket = new WebSocket(`ws://${this.game.settings.server}`);
       this.socket.onopen = () => this.open();
@@ -59,13 +61,14 @@ export class Sockets {
       return true;
     }
 
-    document.getElementById('wsconnect').hidden = true;
+    host.querySelector<HTMLElement>('#wsconnect').hidden = true;
     return false;
   }
 
   open() {
+    const { host } = this.game;
     this.connected = true;
-    document.getElementById('wsconnect').hidden = true;
+    host.querySelector<HTMLElement>('#wsconnect').hidden = true;
     this.game.menu.enableMultiplayer();
   }
 
@@ -74,7 +77,7 @@ export class Sockets {
       this.game.multiplayer = false;
       this.error('The connection has been closed.');
       this.game.running = false;
-      gameMenuHelper(false);
+      gameMenuHelper(this.game, false);
     }
 
     if (this.connected) {
@@ -87,7 +90,8 @@ export class Sockets {
 
   //Requesting the list of open games
   requestList() {
-    const el = document.getElementById('menu-join-list');
+    const { host } = this.game;
+    const el = host.querySelector<HTMLElement>('#menu-join-list');
     el.innerHTML = '';
     el.className = 'menu-list progressindicator';
     this.send({
@@ -96,11 +100,12 @@ export class Sockets {
   }
 
   setList(list: Array<INetworkMatch>) {
-    if (document.getElementById('menu-join').style.display !== 'block') {
+    const { host } = this.game;
+    if (host.querySelector<HTMLElement>('#menu-join').style.display !== 'block') {
       return;
     }
 
-    const el = document.getElementById('menu-join-list');
+    const el = host.querySelector<HTMLElement>('#menu-join-list');
 
     for (let i = 0, n = list.length; i < n; i++) {
       const t = document.createElement('p');
@@ -115,7 +120,7 @@ export class Sockets {
         const reqpwd = t.getAttribute('data-pwd') === 'true';
         const join = () => {
           let pwd = '';
-          const input = document.querySelector<HTMLInputElement>('#gamepwd');
+          const input = host.querySelector<HTMLInputElement>('#gamepwd');
 
           if (input) {
             pwd = input.value;
@@ -165,7 +170,7 @@ export class Sockets {
   measureTime() {
     const oldtime = this.time;
     this.time = new Date().getTime();
-    return this.time - oldtime - LOGIC_TIME;
+    return this.time - oldtime - logicTimeMs;
   }
 
   error(e: string) {

@@ -20,7 +20,7 @@ export class Score implements IScore {
   }
 
   show() {
-    const ss = document.getElementById('scorescreen');
+    const ss = this.game.host.querySelector<HTMLElement>('#scorescreen');
     this.isShown = ss.style.display !== 'block' || this.game.isDead;
 
     if (this.isShown) {

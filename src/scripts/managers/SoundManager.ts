@@ -13,13 +13,13 @@ export class SoundManager<T extends string> {
     this.count = soundNames.length;
     this.canPlay = audio.canPlayType('audio/wav') !== '';
 
-    this.sounds = soundNames.reduce((prev, curr) => {
+    this.sounds = soundNames.reduce((prev, name) => {
       if (this.canPlay) {
         const t = document.createElement('audio');
         t.preload = 'auto';
         t.addEventListener('loadeddata', this.reportLoaded, false);
         t.src = sounds[name];
-        prev[curr] = [t];
+        prev[name] = [t];
       } else {
         this.reportLoaded();
       }

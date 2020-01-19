@@ -1,10 +1,23 @@
 import * as React from 'react';
 import { Game } from './scripts/Game';
 
+let game: Game = undefined;
+
 const Spaceshoot: React.FC = () => {
-  const g = new Game();
+  const host = React.useRef<HTMLDivElement>();
+
+  React.useEffect(() => {
+    if (!game) {
+      game = new Game();
+    }
+
+    game.init(host.current);
+    game.resume();
+    return () => game.pause();
+  }, []);
+
   return (
-    <div className="spaceshoot-page">
+    <div className="spaceshoot-page" ref={host}>
       <audio id="music" preload="auto" loop>
         <source src="sounds/music.mp3" />
         <source src="sounds/music.ogg" />
@@ -143,11 +156,11 @@ const Spaceshoot: React.FC = () => {
         <ul id="menu-host-adv">
           <li>maximum players</li>
           <li>
-            <input type="number" id="menu-game-maxplayers" value="64" max="64" min="1" />
+            <input type="number" id="menu-game-maxplayers" defaultValue="64" max="64" min="1" />
           </li>
           <li>maximum bots</li>
           <li>
-            <input type="number" id="menu-game-maxbots" value="0" max="63" min="0" />
+            <input type="number" id="menu-game-maxbots" defaultValue="0" max="63" min="0" />
           </li>
           <li>
             friendly fire{' '}
@@ -198,8 +211,8 @@ const Spaceshoot: React.FC = () => {
           </li>
           <li>primary / secondary color</li>
           <li>
-            <input className="color" id="menu-primary-color" value="66ff00" type="text" />{' '}
-            <input className="color" id="menu-secondary-color" value="66ff00" type="text" />
+            <input className="color" id="menu-primary-color" defaultValue="#66ff00" type="color" />{' '}
+            <input className="color" id="menu-secondary-color" defaultValue="#66ff00" type="color" />
           </li>
           <li id="menu-usersave" className="menuitem">
             save changes

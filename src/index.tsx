@@ -1,16 +1,16 @@
 import './style.scss';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { PiletApi} from 'sample-piral';
+import type { PiletApi} from 'sample-piral';
 
 const Spaceshoot = React.lazy(() => import('./Spaceshoot'));
 
 export function setup(app: PiletApi) {
   const path = '/spaceshoot';
 
-  app.registerMenu(() => <Link to={path}>Spaceshoot</Link>);
+  app.registerMenu?.(() => <Link to={path}>Spaceshoot</Link>);
 
-  app.registerTile(
+  app.registerTile?.(
     () => (
       <Link to={path} className="spaceshoot-tile">
         Spaceshoot
@@ -22,5 +22,5 @@ export function setup(app: PiletApi) {
     },
   );
 
-  app.registerPage(path, Spaceshoot);
+  app.registerPage?.(path, Spaceshoot);
 }

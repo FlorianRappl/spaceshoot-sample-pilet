@@ -2,37 +2,66 @@
 import { ImageManager } from './ImageManager';
 import { IGame } from '../types';
 
+import explosion from '../../assets/sounds/explosion.wav';
+import laser from '../../assets/sounds/laser.wav';
+import bombSound from '../../assets/sounds/bomb.wav';
+import hit from '../../assets/sounds/hit.wav';
+import powerup from '../../assets/sounds/powerup.wav';
+import background from '../../assets/stars.jpg';
+import asteroid from '../../assets/img/asteroid.png';
+import explosion1 from '../../assets/img/explosion1.png';
+import explosion2 from '../../assets/img/explosion2.png';
+import explosion3 from '../../assets/img/explosion3.png';
+import explosion4 from '../../assets/img/explosion4.png';
+import explosion5 from '../../assets/img/explosion5.png';
+import health from '../../assets/img/health.png';
+import ammo from '../../assets/img/ammo.png';
+import agile from '../../assets/img/agile.png';
+import aim from '../../assets/img/aim.png';
+import plasma from '../../assets/img/plasma.png';
+import multiple from '../../assets/img/multiple.png';
+import bombImage from '../../assets/img/bomb.png';
+import shield from '../../assets/img/shield.png';
+import detonator from '../../assets/img/detonator.png';
+import speedlogo from '../../assets/img/speedlogo.png';
+import bomblogo from '../../assets/img/bomblogo.png';
+import shieldlogo from '../../assets/img/shieldlogo.png';
+import networklogo from '../../assets/img/networklogo.png';
+import healthlogo from '../../assets/img/healthlogo.png';
+import userslogo from '../../assets/img/userslogo.png';
+import flame from '../../assets/img/flame.png';
+
 const sounds = {
-  explosion: require('../../assets/sounds/explosion.wav'),
-  laser: require('../../assets/sounds/laser.wav'),
-  bomb: require('../../assets/sounds/bomb.wav'),
-  hit: require('../../assets/sounds/hit.wav'),
-  powerup: require('../../assets/sounds/powerup.wav'),
+  explosion,
+  laser,
+  bomb: bombSound,
+  hit,
+  powerup,
 };
 const sprites = {
-  background: require('../../assets/stars.jpg'),
-  asteroid: require('../../assets/img/asteroid.png'),
-  explosion1: require('../../assets/img/explosion1.png'),
-  explosion2: require('../../assets/img/explosion2.png'),
-  explosion3: require('../../assets/img/explosion3.png'),
-  explosion4: require('../../assets/img/explosion4.png'),
-  explosion5: require('../../assets/img/explosion5.png'),
-  health: require('../../assets/img/health.png'),
-  ammo: require('../../assets/img/ammo.png'),
-  agile: require('../../assets/img/agile.png'),
-  aim: require('../../assets/img/aim.png'),
-  plasma: require('../../assets/img/plasma.png'),
-  multiple: require('../../assets/img/multiple.png'),
-  bomb: require('../../assets/img/bomb.png'),
-  shield: require('../../assets/img/shield.png'),
-  detonator: require('../../assets/img/detonator.png'),
-  speedlogo: require('../../assets/img/speedlogo.png'),
-  bomblogo: require('../../assets/img/bomblogo.png'),
-  shieldlogo: require('../../assets/img/shieldlogo.png'),
-  networklogo: require('../../assets/img/networklogo.png'),
-  healthlogo: require('../../assets/img/healthlogo.png'),
-  userslogo: require('../../assets/img/userslogo.png'),
-  flame: require('../../assets/img/flame.png'),
+  background,
+  asteroid,
+  explosion1,
+  explosion2,
+  explosion3,
+  explosion4,
+  explosion5,
+  health,
+  ammo,
+  agile,
+  aim,
+  plasma,
+  multiple,
+  bomb: bombImage,
+  shield,
+  detonator,
+  speedlogo,
+  bomblogo,
+  shieldlogo,
+  networklogo,
+  healthlogo,
+  userslogo,
+  flame,
 };
 
 export type SoundNames = keyof typeof sounds;
